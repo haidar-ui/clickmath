@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClickMath</title>
+    <!-- Memuat Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Lucide Icons untuk ikon -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    
+    <!-- Wadah Utama Aplikasi -->
+    <div id="app"></div>
+
+    <script>
+        // --- 1. DATA KURIKULUM ---
+        const kurikulum = [
+            {
+                id: 'unit-1',
+                title: 'Fungsi Komposit dan Invers',
+                topics: [
+                    { id: '1-1', title: 'Evaluasi fungsi komposit', type: 'video', videoId: 'dQw4w9WgXcQ' },
+                    { id: '1-2', title: 'Mencari fungsi invers', type: 'video', videoId: 'dQw4w9WgXcQ' },
+                    { id: '1-3', title: 'Kuis 1: Fungsi Komposit', type: 'quiz', questions: 5 }
+                ]
+            },
+            {
+                id: 'unit-2',
+                title: 'Trigonometri Dasar',
+                topics: [
+                    { id: '2-1', title: 'Nilai Trigonometri sudut istimewa', type: 'video', videoId: 'dQw4w9WgXcQ' },
+                    { id: '2-2', title: 'Aturan Sinus dan Cosinus', type: 'video', videoId: 'dQw4w9WgXcQ' },
+                    { id: '2-3', title: 'Kuis 1: Trigonometri', type: 'quiz', questions: 10 }
+                ]
+            },
+            {
+                id: 'unit-3',
+                title: 'Matriks',
+                topics: [
+                    { id: '3-1', title: 'Pengenalan Matriks & Operasi Dasar', type: 'video', videoId: 'dQw4w9WgXcQ' },
+                    { id: '3-2', title: 'Perkalian Matriks', type: 'video', videoId: 'dQw4w9WgXcQ' },
+                ]
+            }
+        ];
+
+        // --- 2. STATE (Kondisi Aplikasi) ---
+        let state = {
+            activeTab: 'learn', // 'learn', 'news', 'about'
+            activeUnit: kurikulum[0].id,
+            activeTopic: kurikulum[0].topics[0],
+            isSidebarOpen: true
+        };
+
+        // --- 3. FUNGSI LOGIKA (Mengubah State) ---
+        function setActiveTab(tab) {
+            state.activeTab = tab;
+            render();
+        }
+
+        function toggleUnit(unitId) {
+            state.activeUnit = unitId;
+            state.activeTab = 'learn';
+            render();
+        }
+
+        function setActiveTopic(unitId, topicId) {
+            state.activeUnit = unitId;
+            const unit = kurikulum.find(u => u.id === unitId);
+            state.activeTopic = unit.topics.find(t => t.id === topicId);
+            state.activeTab = 'learn';
+            // Menutup sidebar otomatis jika di layar kecil
+            if (window.innerWidth < 768) {
+                state.isSidebarOpen = false;
+            }
+            render();
+        }
+
+        function toggleSidebar() {
+            state.isSidebarOpen = !state.isSidebarOpen;
+            render();
+        }
+
+        // --- 4. FUNGSI TAMPILAN (Render ke HTML) ---
+        function renderLearningView() {
+            if (state.activeTopic.type === 'video') {
+                return `
+                    <div class="max-w-4xl mx-auto">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-6">${state.activeTopic.title}</h1>
+                        <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200">
+                            <!-- Container Video -->
+                            <div class="relative bg-black rounded-lg overflow-hidden" style="padding-bottom: 56.25%;">
+                                <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/${state.activeTopic.videoId}?rel=0" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <div class="mt-6">
+                                <h3 class="text-xl font-semibold mb-2">Tentang video ini</h3>
+                                <p class="text-gray-600">Dalam video ini, kita akan membahas konsep dasar mengenai <strong>${state.activeTopic.title.toLowerCase()}</strong>. Pastikan kamu menyiapkan catatan. Jika ada bagian yang kurang jelas, kamu bisa mengulang videonya.</p>
+                            </div>
+                            <div class="mt-8 pt-6 border-t border-gray-100 flex justify-between items-center">
+                                <p class="text-sm text-gray-500">Kreator: ClickMath Indo</p>
+                                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">Tandai Selesai & Lanjut</button>
+                            </div>
+                        </div>
+                    </div>`;
+            } else {
+                return `
+                    <div class="max-w-4xl mx-auto">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-6">${state.activeTopic.title}</h1>
+                        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center">
+                            <div class="w-20 h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="check-circle" class="w-10 h-10"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-2">Siap untuk menguji pemahamanmu?</h3>
+                            <p class="text-gray-600 mb-8">Kuis ini terdiri dari ${state.activeTopic.questions} soal untuk mengukur penguasaan materi.</p>
+                            <button class="bg-purple-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-purple-700 transition-colors shadow-md">Mulai Kuis</button>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        function renderNewsView() {
+            return `
+                <div class="max-w-3xl mx-auto">
+                    <div class="flex items-center space-x-3 mb-8">
+                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="newspaper" class="w-7 h-7"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-900">News & Updates</h1>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <span class="text-sm font-semibold text-blue-600 tracking-wider uppercase">25 April 2026</span>
+                            <h2 class="text-xl font-bold text-gray-900 mt-2 mb-3">Selamat Datang di ClickMath Versi Beta! 🎉</h2>
+                            <p class="text-gray-600 leading-relaxed">Akhirnya website ini bisa rilis (meskipun masih tahap awal). Saat ini saya sedang fokus melengkapi silabus untuk materi Prekalkulus. Video-video baru akan diunggah setiap akhir pekan. Selamat belajar!</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <span class="text-sm font-semibold text-gray-500 tracking-wider uppercase">20 April 2026</span>
+                            <h2 class="text-xl font-bold text-gray-900 mt-2 mb-3">Unit Trigonometri Dasar Selesai Diunggah</h2>
+                            <p class="text-gray-600 leading-relaxed">Semua video untuk Unit 2: Trigonometri Dasar sudah tersedia. Mulai dari nilai sudut istimewa hingga aturan Sinus dan Cosinus. Latihan kuisnya akan menyusul minggu depan.</p>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderAboutView() {
+            return `
+                <div class="max-w-3xl mx-auto">
+                    <div class="flex items-center space-x-3 mb-8">
+                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                            <i data-lucide="user" class="w-7 h-7"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-900">About This Page</h1>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                        <div class="w-24 h-24 bg-gray-200 rounded-full mb-6 flex items-center justify-center text-gray-400">
+                            <i data-lucide="user" class="w-10 h-10"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Halo, Saya Kreator ClickMath! 👋</h2>
+                        <p class="text-lg text-gray-600 mb-6">Saya percaya bahwa matematika itu bisa dipahami oleh siapa saja asalkan dijelaskan dengan tahapan yang terstruktur dan bahasa yang mudah dimengerti.</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Kenapa website ini dibuat?</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">Terinspirasi dari Khan Academy dan IXL, saya ingin membuat *repository* pembelajaran matematika lokal yang bebas iklan, langsung pada intinya, dan bisa diakses gratis oleh pelajar di seluruh Indonesia. Semua kode website ini sifatnya *open-source* dan di-hosting melalui GitHub Pages.</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Kontak</h3>
+                        <p class="text-gray-600 leading-relaxed">Jika kamu menemukan kesalahan pada video, soal latihan, atau sekadar ingin berdiskusi, jangan ragu untuk menghubungi saya melalui:</p>
+                        <ul class="mt-3 space-y-2 text-blue-600">
+                            <li><a href="#" class="hover:underline flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> Email: kontak@ClickMath.id</a></li>
+                            <li><a href="#" class="hover:underline flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> GitHub: github.com/username</a></li>
+                        </ul>
+                    </div>
+                </div>`;
+        }
+
+        // Fungsi Induk untuk Menggambar Seluruh Halaman
+        function render() {
+            const currentUnitData = kurikulum.find(u => u.id === state.activeUnit);
+            
+            // Generate Silabus Sidebar
+            const silabusHtml = kurikulum.map(unit => {
+                const isActiveUnit = state.activeUnit === unit.id;
+                let topicsHtml = '';
+                
+                if (isActiveUnit) {
+                    topicsHtml = `<div class="mt-1 ml-2 border-l-2 border-gray-100 pl-2">` + 
+                        unit.topics.map(topic => {
+                            const isActiveTopic = state.activeTopic.id === topic.id;
+                            const iconName = topic.type === 'video' ? 'play-circle' : 'check-circle';
+                            const iconColor = topic.type === 'video' ? 'text-gray-400' : 'text-purple-500';
+                            const activeClass = isActiveTopic ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100';
+                            
+                            return `
+                                <button onclick="setActiveTopic('${unit.id}', '${topic.id}')" class="w-full text-left text-sm py-2 px-3 rounded-md flex items-center space-x-2 my-1 ${activeClass}">
+                                    <i data-lucide="${iconName}" class="w-4 h-4 ${iconColor}"></i>
+                                    <span class="truncate">${topic.title}</span>
+                                </button>`;
+                        }).join('') + `</div>`;
+                }
+
+                return `
+                    <div class="mb-4">
+                        <button onclick="toggleUnit('${unit.id}')" class="w-full text-left font-medium text-sm p-2 rounded-md hover:bg-gray-100 flex justify-between items-center ${isActiveUnit ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}">
+                            <span>${unit.title}</span>
+                        </button>
+                        ${topicsHtml}
+                    </div>`;
+            }).join('');
+
+            // Tentukan Judul Header
+            let headerTitle = '';
+            if (state.activeTab === 'learn') headerTitle = currentUnitData.title;
+            else if (state.activeTab === 'news') headerTitle = 'Portal Pengumuman';
+            else headerTitle = 'Tentang Halaman Ini';
+
+            // Gabungkan Struktur Utama
+            document.getElementById('app').innerHTML = `
+                <div class="flex h-screen w-full">
+                    
+                    <!-- Sidebar -->
+                    <div class="bg-white w-72 border-r border-gray-200 flex flex-col transition-transform duration-300 ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full absolute z-20 h-full shadow-lg md:relative md:shadow-none'}">
+                        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-blue-600 text-white">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="book-open"></i>
+                                <h1 class="text-xl font-bold">ClickMath Indo</h1>
+                            </div>
+                            <button class="md:hidden p-1 rounded hover:bg-blue-700" onclick="toggleSidebar()">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="flex-1 overflow-y-auto">
+                            <!-- Navigasi Utama -->
+                            <div class="p-4 border-b border-gray-100">
+                                <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Menu Utama</h2>
+                                <nav class="space-y-1">
+                                    <button onclick="setActiveTab('learn')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${state.activeTab === 'learn' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}">
+                                        <i data-lucide="book-open" class="w-[18px] h-[18px]"></i>
+                                        <span>Ruang Belajar</span>
+                                    </button>
+                                    <button onclick="setActiveTab('news')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${state.activeTab === 'news' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}">
+                                        <i data-lucide="newspaper" class="w-[18px] h-[18px]"></i>
+                                        <span>News / Updates</span>
+                                    </button>
+                                    <button onclick="setActiveTab('about')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${state.activeTab === 'about' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}">
+                                        <i data-lucide="user" class="w-[18px] h-[18px]"></i>
+                                        <span>About Me</span>
+                                    </button>
+                                </nav>
+                            </div>
+
+                            <!-- Silabus -->
+                            <div class="p-4 ${state.activeTab !== 'learn' ? 'opacity-50 pointer-events-none' : ''}">
+                                <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Silabus Prekalkulus</h2>
+                                ${silabusHtml}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="flex-1 flex flex-col h-full overflow-hidden w-full relative">
+                        <!-- Header -->
+                        <header class="bg-white border-b border-gray-200 p-4 flex items-center">
+                            <button class="mr-4 text-gray-500 hover:text-gray-700 md:hidden" onclick="toggleSidebar()">
+                                <i data-lucide="menu"></i>
+                            </button>
+                            <h2 class="text-lg font-semibold text-gray-800">${headerTitle}</h2>
+                        </header>
+                        
+                        <!-- Area Konten Dinamis -->
+                        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50">
+                            ${state.activeTab === 'learn' ? renderLearningView() : ''}
+                            ${state.activeTab === 'news' ? renderNewsView() : ''}
+                            ${state.activeTab === 'about' ? renderAboutView() : ''}
+                        </main>
+                    </div>
+
+                </div>
+            `;
+
+            // Wajib dipanggil untuk mengaktifkan ikon Lucide setelah elemen HTML digambar ulang
+            lucide.createIcons();
+        }
+
+        // --- 5. JALANKAN APLIKASI PERTAMA KALI ---
+        render();
+
+    </script>
+</body>
+</html>
