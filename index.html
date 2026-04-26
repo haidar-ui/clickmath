@@ -8,6 +8,85 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Memuat Lucide Icons untuk ikon -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Memuat Marked.js untuk membaca Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Memuat MathJax untuk merender LaTeX -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    
+    <style>
+        /* Gaya tambahan untuk hasil Markdown agar terlihat rapi */
+        .markdown-body h4 { font-weight: bold; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #111827; }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.6; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .markdown-body strong { font-weight: 600; color: #111827; }
+        .markdown-body em { font-style: italic; }
+
+        /* Gaya khusus untuk mode cetak (Print/PDF) TERBARU */
+        @media print {
+            /* Memaksa margin kertas standar agar memusat */
+            @page { margin: 2cm; }
+            
+            /* Memastikan warna background kotak biru tetap tercetak */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Merapikan teks menjadi Justify (rata kiri kanan) */
+            .markdown-body {
+                text-align: justify;
+                font-size: 11pt;
+            }
+            
+            /* Menghapus semua format scroll di layar agar dokumen bisa diprint berhalaman-halaman */
+            body, html {
+                height: auto !important;
+                overflow: visible !important;
+                background-color: white !important;
+            }
+
+            /* --- SISTEM PAGINASI CANGGIH UNTUK CETAK --- */
+            
+            /* 1. Mencegah paragraf, list, blockquote, dan rumus MathJax terpotong di tengah */
+            .markdown-body p, 
+            .markdown-body li, 
+            .markdown-body pre, 
+            .markdown-body blockquote,
+            mjx-container {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            /* 2. Mencegah Judul (Heading) tertinggal sendirian di akhir halaman */
+            .markdown-body h1, 
+            .markdown-body h2, 
+            .markdown-body h3, 
+            .markdown-body h4, 
+            .markdown-body h5, 
+            .markdown-body h6 {
+                page-break-after: avoid;
+                break-after: avoid;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans text-gray-800">
     
@@ -21,8 +100,37 @@
                 id: 'unit-1',
                 title: '1. Fungsi, Komposisi, dan Invers',
                 topics: [
-                    { id: '1-1', title: 'Daerah Asal (Domain), Kawan, dan Hasil', type: 'video', videoId: 'dQw4w9WgXcQ' },
-                    { id: '1-2', title: 'Operasi Aljabar dan Komposisi Fungsi', type: 'video', videoId: 'dQw4w9WgXcQ' },
+                    { 
+                        id: '1-1', 
+                        title: 'Daerah Asal (Domain), Kawan, dan Hasil', 
+                        type: 'video', 
+                        videoId: 'dQw4w9WgXcQ',
+                        // DISINI BAPAK/IBU BISA MENULIS ARTIKELNYA DENGAN MARKDOWN & LATEX
+                        article: `
+Berikut adalah penjelasan tertulis untuk mendampingi video ini. Membaca rangkuman setelah menonton video akan membantu menguatkan pemahaman konsepmu.
+
+#### Poin Penting:
+* **Domain** adalah himpunan semua nilai $x$ yang membuat fungsi terdefinisi.
+* **Kodomain** adalah himpunan daerah kawan.
+* **Range** adalah himpunan semua nilai $y$ yang dihasilkan dari fungsi $f(x)$.
+
+Misalkan kita memiliki fungsi akar:
+$$ f(x) = \\sqrt{x - 2} $$
+
+Maka, syarat agar fungsi terdefinisi adalah bagian dalam akar harus bernilai positif atau nol:
+$$ x - 2 \\ge 0 $$
+$$ x \\ge 2 $$
+
+Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb{R}\\}$.
+                        `
+                    },
+                    { 
+                        id: '1-2', 
+                        title: 'Operasi Aljabar dan Komposisi Fungsi', 
+                        type: 'video', 
+                        videoId: 'dQw4w9WgXcQ',
+                        article: `Catatan untuk materi ini belum tersedia.`
+                    },
                     { id: '1-3', title: 'Menentukan Fungsi Invers', type: 'video', videoId: 'dQw4w9WgXcQ' },
                     { id: '1-4', title: 'Transformasi Fungsi: Pergeseran (Translasi)', type: 'video', videoId: 'dQw4w9WgXcQ' },
                     { id: '1-5', title: 'Transformasi Fungsi: Refleksi dan Dilatasi', type: 'video', videoId: 'dQw4w9WgXcQ' },
@@ -171,28 +279,73 @@
         }
 
         // --- 4. FUNGSI TAMPILAN (Render ke HTML) ---
-        function renderLearningView() {
+        function renderLearningView(currentUnitData) {
             if (state.activeTopic.type === 'video') {
+                
+                // Ambil teks artikel, jika tidak ada berikan teks default
+                const articleContent = state.activeTopic.article || "Catatan untuk materi ini sedang disiapkan oleh kreator.";
+                
+                // Ubah Markdown menjadi HTML
+                const htmlArticle = marked.parse(articleContent);
+
+                // Setelah HTML digambar ulang, kita perlu memanggil MathJax untuk merender LaTeX
+                // Kita gunakan setTimeout ringan untuk memastikan elemen sudah ada di DOM
+                setTimeout(() => {
+                    if (window.MathJax) {
+                        MathJax.typesetPromise().catch((err) => console.log('MathJax error: ', err));
+                    }
+                }, 100);
+
+                // Mengubah format "1-1" menjadi "1.1" untuk judul video
+                const videoNumber = state.activeTopic.id.replace('-', '.');
+
                 return `
-                    <div class="max-w-4xl mx-auto">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-6">${state.activeTopic.title}</h1>
-                        <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200">
+                    <div class="max-w-4xl mx-auto print:max-w-full print:mx-0">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-6 print:hidden">${state.activeTopic.title}</h1>
+                        <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200 print:hidden">
                             <!-- Container Video -->
                             <div class="relative bg-black rounded-lg overflow-hidden" style="padding-bottom: 56.25%;">
                                 <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/${state.activeTopic.videoId}?rel=0" frameborder="0" allowfullscreen></iframe>
                             </div>
-                            <div class="mt-6">
-                                <h3 class="text-xl font-semibold mb-2">Tentang video ini</h3>
-                                <p class="text-gray-600">Dalam video ini, kita akan membahas konsep mengenai <strong>${state.activeTopic.title.toLowerCase()}</strong>. Pastikan kamu menyiapkan catatan. Jika ada bagian yang kurang jelas, kamu bisa mengulang videonya.</p>
+                        </div>
+                            
+                        <!-- Container Artikel Terkait (Area yang akan dicetak) -->
+                        <div class="mt-8 print:mt-0" id="print-area">
+                            
+                            <!-- Header Cetak Khusus (Hanya muncul saat print ke PDF) -->
+                            <div class="hidden print:block bg-blue-600 text-white p-8 rounded-2xl mb-8" style="break-inside: avoid; page-break-inside: avoid;">
+                                <div class="flex items-center space-x-3 mb-6 border-b border-blue-400 pb-4">
+                                    <i data-lucide="book-open" class="w-10 h-10"></i>
+                                    <h1 class="text-3xl font-extrabold tracking-tight">ClickMath</h1>
+                                </div>
+                                <div class="space-y-2">
+                                    <p class="text-blue-200 text-sm font-bold uppercase tracking-widest">Prekalkulus</p>
+                                    <h2 class="text-2xl font-bold">${currentUnitData.title}</h2>
+                                    <p class="text-blue-50 text-lg">Video ${videoNumber}: ${state.activeTopic.title}</p>
+                                </div>
                             </div>
-                            <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end items-center">
-                                <button class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">Tandai Selesai & Lanjut</button>
+
+                            <!-- Header Layar Normal (Sembunyi saat print) -->
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 print:hidden">
+                                <h3 class="text-xl font-bold text-gray-900 flex items-center">
+                                    <i data-lucide="file-text" class="w-6 h-6 mr-2 text-blue-600"></i>
+                                    Ringkasan: ${state.activeTopic.title}
+                                </h3>
+                                <button onclick="window.print()" class="mt-3 sm:mt-0 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300 shadow-sm">
+                                    <i data-lucide="printer" class="w-4 h-4 mr-2"></i>
+                                    Cetak PDF
+                                </button>
+                            </div>
+                            
+                            <!-- Konten Artikel Markdown -->
+                            <div class="bg-blue-50 print:bg-white p-6 print:p-0 rounded-xl border border-blue-100 print:border-none text-gray-700 leading-relaxed markdown-body">
+                                ${htmlArticle}
                             </div>
                         </div>
                     </div>`;
             } else {
                 return `
-                    <div class="max-w-4xl mx-auto">
+                    <div class="max-w-4xl mx-auto print:hidden">
                         <h1 class="text-3xl font-bold text-gray-900 mb-6">${state.activeTopic.title}</h1>
                         <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center">
                             <div class="w-20 h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -364,10 +517,10 @@
 
             // Gabungkan Struktur Utama
             document.getElementById('app').innerHTML = `
-                <div class="flex h-screen w-full">
+                <div class="flex h-screen w-full print:block print:h-auto">
                     
                     <!-- Sidebar -->
-                    <div class="bg-white w-72 border-r border-gray-200 flex flex-col transition-transform duration-300 ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full absolute z-20 h-full shadow-lg md:relative md:shadow-none'}">
+                    <div class="bg-white w-72 border-r border-gray-200 flex flex-col transition-transform duration-300 ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full absolute z-20 h-full shadow-lg md:relative md:shadow-none'} print:hidden">
                         <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-blue-600 text-white">
                             <div class="flex items-center space-x-2">
                                 <i data-lucide="book-open"></i>
@@ -411,9 +564,9 @@
                     </div>
 
                     <!-- Main Content -->
-                    <div class="flex-1 flex flex-col h-full overflow-hidden w-full relative">
+                    <div class="flex-1 flex flex-col h-full overflow-hidden w-full relative print:block print:h-auto print:overflow-visible">
                         <!-- Header -->
-                        <header class="bg-white border-b border-gray-200 p-4 flex items-center">
+                        <header class="bg-white border-b border-gray-200 p-4 flex items-center print:hidden">
                             <button class="mr-4 text-gray-500 hover:text-gray-700 md:hidden" onclick="toggleSidebar()">
                                 <i data-lucide="menu"></i>
                             </button>
@@ -421,8 +574,8 @@
                         </header>
                         
                         <!-- Area Konten Dinamis -->
-                        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50">
-                            ${state.activeTab === 'learn' ? renderLearningView() : ''}
+                        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 print:block print:overflow-visible print:p-0 print:bg-white">
+                            ${state.activeTab === 'learn' ? renderLearningView(currentUnitData) : ''}
                             ${state.activeTab === 'practice' ? renderPracticeView() : ''}
                             ${state.activeTab === 'news' ? renderNewsView() : ''}
                             ${state.activeTab === 'about' ? renderAboutView() : ''}
