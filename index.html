@@ -4,8 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClickMath</title>
-    <!-- Memuat Tailwind CSS untuk styling -->
+    
+    <!-- Memuat Google Fonts: Outfit (Geometric Sans untuk Headings) & Inter (Sans-serif untuk Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Memuat Tailwind CSS & Konfigurasi Font Custom -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Outfit', 'sans-serif'], // Font baru yang mirip Google Sans
+            }
+          }
+        }
+      }
+    </script>
+
     <!-- Memuat Lucide Icons untuk ikon -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -30,65 +49,46 @@
     
     <style>
         /* Gaya tambahan untuk hasil Markdown agar terlihat rapi */
-        .markdown-body h4 { font-weight: bold; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #111827; }
-        .markdown-body p { margin-bottom: 1rem; line-height: 1.6; }
-        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
-        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
-        .markdown-body strong { font-weight: 600; color: #111827; }
+        .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { 
+            font-family: 'Outfit', sans-serif; /* Memaksa judul artikel pakai font baru */
+            font-weight: 700; 
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
+            color: #0f172a; /* text-slate-900 */
+        }
+        .markdown-body p { margin-bottom: 1rem; line-height: 1.7; color: #334155; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #334155;}
+        .markdown-body ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; color: #334155;}
+        .markdown-body strong { font-weight: 600; color: #0f172a; }
         .markdown-body em { font-style: italic; }
 
         /* Gaya khusus untuk mode cetak (Print/PDF) TERBARU */
         @media print {
-            /* Memaksa margin kertas standar agar memusat */
             @page { margin: 2cm; }
-            
-            /* Memastikan warna background kotak biru tetap tercetak */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-
-            /* Merapikan teks menjadi Justify (rata kiri kanan) */
             .markdown-body {
                 text-align: justify;
                 font-size: 11pt;
             }
-            
-            /* Menghapus semua format scroll di layar agar dokumen bisa diprint berhalaman-halaman */
             body, html {
                 height: auto !important;
                 overflow: visible !important;
                 background-color: white !important;
             }
-
-            /* --- SISTEM PAGINASI CANGGIH UNTUK CETAK --- */
-            
-            /* 1. Mencegah paragraf, list, blockquote, dan rumus MathJax terpotong di tengah */
-            .markdown-body p, 
-            .markdown-body li, 
-            .markdown-body pre, 
-            .markdown-body blockquote,
-            mjx-container {
-                page-break-inside: avoid;
-                break-inside: avoid;
+            /* SISTEM PAGINASI CANGGIH UNTUK CETAK */
+            .markdown-body p, .markdown-body li, .markdown-body pre, .markdown-body blockquote, mjx-container {
+                page-break-inside: avoid; break-inside: avoid;
             }
-
-            /* 2. Mencegah Judul (Heading) tertinggal sendirian di akhir halaman */
-            .markdown-body h1, 
-            .markdown-body h2, 
-            .markdown-body h3, 
-            .markdown-body h4, 
-            .markdown-body h5, 
-            .markdown-body h6 {
-                page-break-after: avoid;
-                break-after: avoid;
-                page-break-inside: avoid;
-                break-inside: avoid;
+            .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+                page-break-after: avoid; break-after: avoid; page-break-inside: avoid; break-inside: avoid;
             }
         }
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="bg-slate-50 font-sans text-slate-800 antialiased selection:bg-blue-200 selection:text-blue-900">
     
     <!-- Wadah Utama Aplikasi -->
     <div id="app"></div>
@@ -105,7 +105,6 @@
                         title: 'Daerah Asal (Domain), Kawan, dan Hasil', 
                         type: 'video', 
                         videoId: 'dQw4w9WgXcQ',
-                        // DISINI BAPAK/IBU BISA MENULIS ARTIKELNYA DENGAN MARKDOWN & LATEX
                         article: `
 Berikut adalah penjelasan tertulis untuk mendampingi video ini. Membaca rangkuman setelah menonton video akan membantu menguatkan pemahaman konsepmu.
 
@@ -115,11 +114,11 @@ Berikut adalah penjelasan tertulis untuk mendampingi video ini. Membaca rangkuma
 * **Range** adalah himpunan semua nilai $y$ yang dihasilkan dari fungsi $f(x)$.
 
 Misalkan kita memiliki fungsi akar:
-$$ f(x) = \\sqrt{x - 2} $$
+$$f(x) = \\sqrt{x - 2}$$
 
 Maka, syarat agar fungsi terdefinisi adalah bagian dalam akar harus bernilai positif atau nol:
-$$ x - 2 \\ge 0 $$
-$$ x \\ge 2 $$
+$$x - 2 \\ge 0$$
+$$x \\ge 2$$
 
 Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb{R}\\}$.
                         `
@@ -282,29 +281,24 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
         function renderLearningView(currentUnitData) {
             if (state.activeTopic.type === 'video') {
                 
-                // Ambil teks artikel, jika tidak ada berikan teks default
                 const articleContent = state.activeTopic.article || "Catatan untuk materi ini sedang disiapkan oleh kreator.";
-                
-                // Ubah Markdown menjadi HTML
                 const htmlArticle = marked.parse(articleContent);
 
-                // Setelah HTML digambar ulang, kita perlu memanggil MathJax untuk merender LaTeX
-                // Kita gunakan setTimeout ringan untuk memastikan elemen sudah ada di DOM
                 setTimeout(() => {
                     if (window.MathJax) {
                         MathJax.typesetPromise().catch((err) => console.log('MathJax error: ', err));
                     }
                 }, 100);
 
-                // Mengubah format "1-1" menjadi "1.1" untuk judul video
                 const videoNumber = state.activeTopic.id.replace('-', '.');
 
                 return `
                     <div class="max-w-4xl mx-auto print:max-w-full print:mx-0">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-6 print:hidden">${state.activeTopic.title}</h1>
-                        <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200 print:hidden">
+                        <h1 class="text-3xl font-display font-bold text-slate-900 mb-6 print:hidden">${state.activeTopic.title}</h1>
+                        
+                        <div class="bg-white p-4 md:p-6 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 print:hidden">
                             <!-- Container Video -->
-                            <div class="relative bg-black rounded-lg overflow-hidden" style="padding-bottom: 56.25%;">
+                            <div class="relative bg-slate-900 rounded-xl overflow-hidden shadow-inner" style="padding-bottom: 56.25%;">
                                 <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/${state.activeTopic.videoId}?rel=0" frameborder="0" allowfullscreen></iframe>
                             </div>
                         </div>
@@ -313,32 +307,32 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
                         <div class="mt-8 print:mt-0" id="print-area">
                             
                             <!-- Header Cetak Khusus (Hanya muncul saat print ke PDF) -->
-                            <div class="hidden print:block bg-blue-600 text-white p-8 rounded-2xl mb-8" style="break-inside: avoid; page-break-inside: avoid;">
-                                <div class="flex items-center space-x-3 mb-6 border-b border-blue-400 pb-4">
+                            <div class="hidden print:block bg-blue-700 text-white p-8 rounded-2xl mb-8" style="break-inside: avoid; page-break-inside: avoid;">
+                                <div class="flex items-center space-x-3 mb-6 border-b border-blue-500 pb-4">
                                     <i data-lucide="book-open" class="w-10 h-10"></i>
-                                    <h1 class="text-3xl font-extrabold tracking-tight">ClickMath</h1>
+                                    <h1 class="text-4xl font-display font-bold tracking-tight">ClickMath</h1>
                                 </div>
                                 <div class="space-y-2">
-                                    <p class="text-blue-200 text-sm font-bold uppercase tracking-widest">Prekalkulus</p>
-                                    <h2 class="text-2xl font-bold">${currentUnitData.title}</h2>
-                                    <p class="text-blue-50 text-lg">Video ${videoNumber}: ${state.activeTopic.title}</p>
+                                    <p class="text-blue-200 text-sm font-bold uppercase tracking-widest font-sans">Prekalkulus</p>
+                                    <h2 class="text-2xl font-display font-bold">${currentUnitData.title}</h2>
+                                    <p class="text-blue-50 text-lg font-display">Video ${videoNumber}: ${state.activeTopic.title}</p>
                                 </div>
                             </div>
 
                             <!-- Header Layar Normal (Sembunyi saat print) -->
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 print:hidden">
-                                <h3 class="text-xl font-bold text-gray-900 flex items-center">
-                                    <i data-lucide="file-text" class="w-6 h-6 mr-2 text-blue-600"></i>
-                                    Ringkasan: ${state.activeTopic.title}
+                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-5 print:hidden px-2">
+                                <h3 class="text-2xl font-display font-bold text-slate-800 flex items-center">
+                                    <i data-lucide="file-text" class="w-7 h-7 mr-3 text-blue-600"></i>
+                                    Ringkasan Topik
                                 </h3>
-                                <button onclick="window.print()" class="mt-3 sm:mt-0 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-300 shadow-sm">
+                                <button onclick="window.print()" class="mt-4 sm:mt-0 flex items-center justify-center bg-white hover:bg-slate-50 text-slate-600 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all border border-slate-200 shadow-sm hover:shadow hover:text-blue-600">
                                     <i data-lucide="printer" class="w-4 h-4 mr-2"></i>
                                     Cetak PDF
                                 </button>
                             </div>
                             
                             <!-- Konten Artikel Markdown -->
-                            <div class="bg-blue-50 print:bg-white p-6 print:p-0 rounded-xl border border-blue-100 print:border-none text-gray-700 leading-relaxed markdown-body">
+                            <div class="bg-white print:bg-white p-8 print:p-0 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-slate-100 print:border-none text-slate-700 leading-relaxed markdown-body">
                                 ${htmlArticle}
                             </div>
                         </div>
@@ -346,14 +340,14 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
             } else {
                 return `
                     <div class="max-w-4xl mx-auto print:hidden">
-                        <h1 class="text-3xl font-bold text-gray-900 mb-6">${state.activeTopic.title}</h1>
-                        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center">
-                            <div class="w-20 h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <h1 class="text-3xl font-display font-bold text-slate-900 mb-6">${state.activeTopic.title}</h1>
+                        <div class="bg-white p-10 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 text-center">
+                            <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-5">
                                 <i data-lucide="check-circle" class="w-10 h-10"></i>
                             </div>
-                            <h3 class="text-2xl font-bold mb-2">Siap untuk menguji pemahamanmu?</h3>
-                            <p class="text-gray-600 mb-8">Kuis ini terdiri dari ${state.activeTopic.questions} soal untuk mengukur penguasaan materi.</p>
-                            <button class="bg-purple-600 text-white px-8 py-3 rounded-lg font-bold text-lg hover:bg-purple-700 transition-colors shadow-md">Mulai Kuis</button>
+                            <h3 class="text-2xl font-display font-bold mb-3 text-slate-800">Uji Pemahaman Topik Ini</h3>
+                            <p class="text-slate-500 mb-8 max-w-md mx-auto">Kuis ini terdiri dari ${state.activeTopic.questions} soal untuk mengukur seberapa baik kamu menguasai materi dari video sebelumnya.</p>
+                            <button class="bg-blue-600 text-white px-8 py-3.5 rounded-xl font-bold text-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">Mulai Kerjakan Kuis</button>
                         </div>
                     </div>`;
             }
@@ -363,58 +357,58 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
         function renderPracticeView() {
             return `
                 <div class="max-w-5xl mx-auto">
-                    <div class="flex items-center space-x-4 mb-8">
-                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                    <div class="flex items-center space-x-4 mb-10">
+                        <div class="p-3.5 bg-indigo-50 text-indigo-600 rounded-2xl">
                             <i data-lucide="pen-tool" class="w-8 h-8"></i>
                         </div>
                         <div>
-                            <h1 class="text-3xl font-bold text-gray-900">Pusat Latihan Soal</h1>
-                            <p class="text-gray-600 mt-1">Pilih tipe latihan yang sesuai dengan target belajarmu hari ini.</p>
+                            <h1 class="text-3xl font-display font-bold text-slate-900">Pusat Latihan Soal</h1>
+                            <p class="text-slate-500 mt-1">Pilih tingkat kesulitan yang sesuai dengan target belajarmu hari ini.</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- Tipe 1: Drilling -->
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col h-full hover:shadow-md transition-shadow">
-                            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-4">
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full hover:shadow-md transition-shadow">
+                            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-5">
                                 <i data-lucide="zap" class="w-6 h-6"></i>
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 mb-2">Drilling Dasar</h2>
-                            <span class="inline-block bg-green-50 text-green-700 text-xs px-2 py-1 rounded mb-3 font-bold uppercase tracking-wide w-max">LOTS & MOTS</span>
-                            <p class="text-gray-600 mb-6 flex-1 text-sm leading-relaxed">
-                                Latihan soal tipe standar dalam jumlah banyak. Sangat cocok untuk membangun insting matematika, mempercepat perhitungan, dan kebiasaan (Expertise).
+                            <h2 class="text-xl font-display font-bold text-slate-800 mb-2">Drilling Dasar</h2>
+                            <span class="inline-block bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded-md mb-4 font-bold uppercase tracking-wider w-max">LOTS & MOTS</span>
+                            <p class="text-slate-500 mb-8 flex-1 text-sm leading-relaxed">
+                                Latihan soal tipe standar dalam jumlah banyak. Sangat cocok untuk membangun insting matematika dan mempercepat perhitungan (Expertise).
                             </p>
-                            <button class="w-full bg-white border-2 border-green-600 text-green-600 hover:bg-green-50 font-semibold py-2.5 rounded-lg transition-colors">
+                            <button class="w-full bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-bold py-3 rounded-xl transition-colors">
                                 Mulai Drilling
                             </button>
                         </div>
 
                         <!-- Tipe 2: Concept (HOTS) -->
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col h-full hover:shadow-md transition-shadow">
-                            <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full hover:shadow-md transition-shadow">
+                            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-5">
                                 <i data-lucide="brain" class="w-6 h-6"></i>
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 mb-2">Pemahaman Konsep</h2>
-                            <span class="inline-block bg-purple-50 text-purple-700 text-xs px-2 py-1 rounded mb-3 font-bold uppercase tracking-wide w-max">HOTS Mudah - Sedang</span>
-                            <p class="text-gray-600 mb-6 flex-1 text-sm leading-relaxed">
-                                Soal-soal analitis yang tak terlalu rumit dihitung, tapi memaksamu berpikir <i>out-of-the-box</i>. Cocok untuk menguji kedalaman konsepmu (Mastery).
+                            <h2 class="text-xl font-display font-bold text-slate-800 mb-2">Pemahaman Konsep</h2>
+                            <span class="inline-block bg-purple-50 text-purple-700 text-xs px-2.5 py-1 rounded-md mb-4 font-bold uppercase tracking-wider w-max">HOTS Mudah - Sedang</span>
+                            <p class="text-slate-500 mb-8 flex-1 text-sm leading-relaxed">
+                                Soal analitis yang tak rumit dihitung, tapi memaksamu berpikir <i>out-of-the-box</i>. Cocok untuk menguji kedalaman konsepmu (Mastery).
                             </p>
-                            <button class="w-full bg-white border-2 border-purple-600 text-purple-600 hover:bg-purple-50 font-semibold py-2.5 rounded-lg transition-colors">
+                            <button class="w-full bg-white border-2 border-purple-500 text-purple-600 hover:bg-purple-50 font-bold py-3 rounded-xl transition-colors">
                                 Uji Pemahaman
                             </button>
                         </div>
 
                         <!-- Tipe 3: Persiapan Ujian -->
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col h-full hover:shadow-md transition-shadow">
-                            <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-4">
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col h-full hover:shadow-md transition-shadow">
+                            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-5">
                                 <i data-lucide="graduation-cap" class="w-6 h-6"></i>
                             </div>
-                            <h2 class="text-xl font-bold text-gray-900 mb-2">Persiapan Ujian</h2>
-                            <span class="inline-block bg-orange-50 text-orange-700 text-xs px-2 py-1 rounded mb-3 font-bold uppercase tracking-wide w-max">Ulangan & UTBK / TKA</span>
-                            <p class="text-gray-600 mb-6 flex-1 text-sm leading-relaxed">
-                                Simulasi bank soal sekelas Ulangan Harian, Ujian Sekolah, hingga seleksi masuk PTN. Kerjakan jika kamu merasa sudah benar-benar siap.
+                            <h2 class="text-xl font-display font-bold text-slate-800 mb-2">Persiapan Ujian</h2>
+                            <span class="inline-block bg-amber-50 text-amber-700 text-xs px-2.5 py-1 rounded-md mb-4 font-bold uppercase tracking-wider w-max">Ulangan & UTBK</span>
+                            <p class="text-slate-500 mb-8 flex-1 text-sm leading-relaxed">
+                                Simulasi bank soal sekelas Ulangan Harian, Ujian Sekolah, hingga seleksi masuk PTN. Kerjakan jika kamu merasa benar-benar siap.
                             </p>
-                            <button class="w-full bg-white border-2 border-orange-600 text-orange-600 hover:bg-orange-50 font-semibold py-2.5 rounded-lg transition-colors">
+                            <button class="w-full bg-white border-2 border-amber-500 text-amber-600 hover:bg-amber-50 font-bold py-3 rounded-xl transition-colors">
                                 Lihat Bank Soal
                             </button>
                         </div>
@@ -426,22 +420,22 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
         function renderNewsView() {
             return `
                 <div class="max-w-3xl mx-auto">
-                    <div class="flex items-center space-x-3 mb-8">
-                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                            <i data-lucide="newspaper" class="w-7 h-7"></i>
+                    <div class="flex items-center space-x-4 mb-10">
+                        <div class="p-3.5 bg-blue-50 text-blue-600 rounded-2xl">
+                            <i data-lucide="newspaper" class="w-8 h-8"></i>
                         </div>
-                        <h1 class="text-3xl font-bold text-gray-900">News & Updates</h1>
+                        <h1 class="text-3xl font-display font-bold text-slate-900">News & Updates</h1>
                     </div>
                     <div class="space-y-6">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                            <span class="text-sm font-semibold text-blue-600 tracking-wider uppercase">25 April 2026</span>
-                            <h2 class="text-xl font-bold text-gray-900 mt-2 mb-3">Selamat Datang di ClickMath Versi Beta! 🎉</h2>
-                            <p class="text-gray-600 leading-relaxed">Akhirnya website ini bisa rilis (meskipun masih tahap awal). Saat ini saya sedang fokus melengkapi silabus untuk materi Prekalkulus, khususnya bab Fungsi. Video-video baru akan diunggah secara berkala. Selamat belajar!</p>
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                            <span class="text-xs font-bold text-blue-600 tracking-widest uppercase">25 April 2026</span>
+                            <h2 class="text-2xl font-display font-bold text-slate-900 mt-3 mb-4">Selamat Datang di ClickMath Versi Beta! 🎉</h2>
+                            <p class="text-slate-600 leading-relaxed">Akhirnya website ini bisa rilis (meskipun masih tahap awal). Saat ini saya sedang fokus melengkapi silabus untuk materi Prekalkulus, khususnya bab Fungsi. Video-video baru akan diunggah secara berkala. Selamat belajar!</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                            <span class="text-sm font-semibold text-gray-500 tracking-wider uppercase">20 April 2026</span>
-                            <h2 class="text-xl font-bold text-gray-900 mt-2 mb-3">Roadmap Kurikulum Ditambahkan</h2>
-                            <p class="text-gray-600 leading-relaxed">Silabus kini mencakup Fungsi Secara Umum, Linear, Kuadrat, Rasional, Bentuk Akar, Eksponensial, hingga Logaritma. Struktur ini disusun agar siswa bisa memahami pola setiap fungsi secara komprehensif.</p>
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                            <span class="text-xs font-bold text-slate-400 tracking-widest uppercase">20 April 2026</span>
+                            <h2 class="text-2xl font-display font-bold text-slate-900 mt-3 mb-4">Roadmap Kurikulum Ditambahkan</h2>
+                            <p class="text-slate-600 leading-relaxed">Silabus kini mencakup Fungsi Secara Umum, Linear, Kuadrat, Rasional, Bentuk Akar, Eksponensial, hingga Logaritma. Struktur ini disusun agar siswa bisa memahami pola setiap fungsi secara komprehensif.</p>
                         </div>
                     </div>
                 </div>`;
@@ -450,25 +444,27 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
         function renderAboutView() {
             return `
                 <div class="max-w-3xl mx-auto">
-                    <div class="flex items-center space-x-3 mb-8">
-                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                            <i data-lucide="user" class="w-7 h-7"></i>
+                    <div class="flex items-center space-x-4 mb-10">
+                        <div class="p-3.5 bg-blue-50 text-blue-600 rounded-2xl">
+                            <i data-lucide="user" class="w-8 h-8"></i>
                         </div>
-                        <h1 class="text-3xl font-bold text-gray-900">About This Page</h1>
+                        <h1 class="text-3xl font-display font-bold text-slate-900">About This Page</h1>
                     </div>
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                        <div class="w-24 h-24 bg-gray-200 rounded-full mb-6 flex items-center justify-center text-gray-400">
+                    <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="w-24 h-24 bg-slate-100 rounded-full mb-8 flex items-center justify-center text-slate-400">
                             <i data-lucide="user" class="w-10 h-10"></i>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Halo, Saya Kreator ClickMath! 👋</h2>
-                        <p class="text-lg text-gray-600 mb-6">Saya percaya bahwa matematika itu bisa dipahami oleh siapa saja asalkan dijelaskan dengan tahapan yang terstruktur dan bahasa yang mudah dimengerti.</p>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Kenapa website ini dibuat?</h3>
-                        <p class="text-gray-600 leading-relaxed mb-4">Terinspirasi dari Khan Academy dan IXL, saya ingin membuat *repository* pembelajaran matematika lokal yang bebas iklan, langsung pada intinya, dan bisa diakses gratis oleh pelajar di seluruh Indonesia. Semua kode website ini sifatnya *open-source* dan di-hosting melalui GitHub Pages.</p>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-8">Kontak</h3>
-                        <p class="text-gray-600 leading-relaxed">Jika kamu menemukan kesalahan pada video, soal latihan, atau sekadar ingin berdiskusi, jangan ragu untuk menghubungi saya melalui:</p>
-                        <ul class="mt-3 space-y-2 text-blue-600">
-                            <li><a href="#" class="hover:underline flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> Email: kontak@clickmath.id</a></li>
-                            <li><a href="#" class="hover:underline flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 mr-1"></i> GitHub: github.com/username</a></li>
+                        <h2 class="text-2xl font-display font-bold text-slate-900 mb-3">Halo, Saya Kreator ClickMath! 👋</h2>
+                        <p class="text-lg text-slate-600 mb-8">Saya percaya bahwa matematika itu bisa dipahami oleh siapa saja asalkan dijelaskan dengan tahapan yang terstruktur dan bahasa yang mudah dimengerti.</p>
+                        
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-3 mt-10 border-t border-slate-100 pt-8">Kenapa website ini dibuat?</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">Terinspirasi dari Khan Academy dan IXL, saya ingin membuat repository pembelajaran matematika lokal yang bebas iklan, langsung pada intinya, dan bisa diakses gratis oleh pelajar di seluruh Indonesia. Semua kode website ini sifatnya open-source dan di-hosting melalui GitHub Pages.</p>
+                        
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-3 mt-10">Kontak</h3>
+                        <p class="text-slate-600 leading-relaxed">Jika kamu menemukan kesalahan pada video, soal latihan, atau sekadar ingin berdiskusi, jangan ragu untuk menghubungi saya melalui:</p>
+                        <ul class="mt-4 space-y-3 text-blue-600 font-medium">
+                            <li><a href="#" class="hover:underline flex items-center"><i data-lucide="mail" class="w-4 h-4 mr-2"></i> kontak@clickmath.id</a></li>
+                            <li><a href="#" class="hover:underline flex items-center"><i data-lucide="github" class="w-4 h-4 mr-2"></i> github.com/username</a></li>
                         </ul>
                     </div>
                 </div>`;
@@ -484,24 +480,31 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
                 let topicsHtml = '';
                 
                 if (isActiveUnit) {
-                    topicsHtml = `<div class="mt-1 ml-2 border-l-2 border-gray-100 pl-2">` + 
+                    topicsHtml = `<div class="mt-1.5 ml-3 border-l-2 border-slate-100 pl-3">` + 
                         unit.topics.map(topic => {
                             const isActiveTopic = state.activeTopic.id === topic.id;
                             const iconName = topic.type === 'video' ? 'play-circle' : 'check-circle';
-                            const iconColor = topic.type === 'video' ? 'text-gray-400' : 'text-purple-500';
-                            const activeClass = isActiveTopic ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-100';
+                            
+                            // Pewarnaan yang lebih halus
+                            let iconColor = 'text-slate-400';
+                            if (isActiveTopic) iconColor = 'text-blue-600';
+                            else if (topic.type === 'quiz') iconColor = 'text-blue-400';
+
+                            const activeClass = isActiveTopic 
+                                ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm' 
+                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
                             
                             return `
-                                <button onclick="setActiveTopic('${unit.id}', '${topic.id}')" class="w-full text-left text-sm py-2 px-3 rounded-md flex items-center space-x-2 my-1 ${activeClass}">
+                                <button onclick="setActiveTopic('${unit.id}', '${topic.id}')" class="w-full text-left text-sm py-2 px-3 rounded-xl flex items-center space-x-2.5 my-1 transition-all ${activeClass}">
                                     <i data-lucide="${iconName}" class="w-4 h-4 shrink-0 ${iconColor}"></i>
-                                    <span class="truncate">${topic.title}</span>
+                                    <span class="truncate tracking-wide">${topic.title}</span>
                                 </button>`;
                         }).join('') + `</div>`;
                 }
 
                 return `
-                    <div class="mb-4">
-                        <button onclick="toggleUnit('${unit.id}')" class="w-full text-left font-medium text-sm p-2 rounded-md hover:bg-gray-100 flex justify-between items-center ${isActiveUnit ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}">
+                    <div class="mb-3">
+                        <button onclick="toggleUnit('${unit.id}')" class="w-full text-left font-bold text-sm p-3 rounded-xl hover:bg-slate-100 flex justify-between items-center transition-colors ${isActiveUnit ? 'text-blue-700 bg-blue-50/50' : 'text-slate-700'}">
                             <span>${unit.title}</span>
                         </button>
                         ${topicsHtml}
@@ -520,35 +523,35 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
                 <div class="flex h-screen w-full print:block print:h-auto">
                     
                     <!-- Sidebar -->
-                    <div class="bg-white w-72 border-r border-gray-200 flex flex-col transition-transform duration-300 ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full absolute z-20 h-full shadow-lg md:relative md:shadow-none'} print:hidden">
-                        <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-blue-600 text-white">
-                            <div class="flex items-center space-x-2">
-                                <i data-lucide="book-open"></i>
-                                <h1 class="text-xl font-bold">ClickMath</h1>
+                    <div class="bg-white w-[300px] border-r border-slate-200 flex flex-col transition-transform duration-300 ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full absolute z-20 h-full shadow-2xl md:relative md:shadow-none'} print:hidden">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center text-blue-700">
+                            <div class="flex items-center space-x-3">
+                                <i data-lucide="book-open" class="w-7 h-7"></i>
+                                <h1 class="text-2xl font-display font-bold tracking-tight">ClickMath</h1>
                             </div>
-                            <button class="md:hidden p-1 rounded hover:bg-blue-700" onclick="toggleSidebar()">
-                                <i data-lucide="x"></i>
+                            <button class="md:hidden p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700" onclick="toggleSidebar()">
+                                <i data-lucide="x" class="w-5 h-5"></i>
                             </button>
                         </div>
                         
-                        <div class="flex-1 overflow-y-auto">
+                        <div class="flex-1 overflow-y-auto pb-8">
                             <!-- Navigasi Utama -->
-                            <div class="p-4 border-b border-gray-100">
-                                <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Menu Utama</h2>
-                                <nav class="space-y-1">
-                                    <button onclick="setActiveTab('learn')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${state.activeTab === 'learn' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}">
+                            <div class="p-5 border-b border-slate-100">
+                                <h2 class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Menu Utama</h2>
+                                <nav class="space-y-1.5">
+                                    <button onclick="setActiveTab('learn')" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${state.activeTab === 'learn' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}">
                                         <i data-lucide="book-open" class="w-[18px] h-[18px]"></i>
                                         <span>Materi Belajar</span>
                                     </button>
-                                    <button onclick="setActiveTab('practice')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${state.activeTab === 'practice' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}">
+                                    <button onclick="setActiveTab('practice')" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${state.activeTab === 'practice' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}">
                                         <i data-lucide="pen-tool" class="w-[18px] h-[18px]"></i>
                                         <span>Latihan Soal</span>
                                     </button>
-                                    <button onclick="setActiveTab('news')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${state.activeTab === 'news' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}">
+                                    <button onclick="setActiveTab('news')" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${state.activeTab === 'news' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}">
                                         <i data-lucide="newspaper" class="w-[18px] h-[18px]"></i>
                                         <span>News / Updates</span>
                                     </button>
-                                    <button onclick="setActiveTab('about')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${state.activeTab === 'about' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}">
+                                    <button onclick="setActiveTab('about')" class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${state.activeTab === 'about' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}">
                                         <i data-lucide="user" class="w-[18px] h-[18px]"></i>
                                         <span>About Me</span>
                                     </button>
@@ -556,25 +559,25 @@ Jadi, Domain dari fungsi tersebut adalah $D_f = \\{x | x \\ge 2, x \\in \\mathbb
                             </div>
 
                             <!-- Silabus -->
-                            <div class="p-4 ${state.activeTab !== 'learn' ? 'opacity-50 pointer-events-none' : ''}">
-                                <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Silabus Prekalkulus</h2>
+                            <div class="p-5 ${state.activeTab !== 'learn' ? 'opacity-40 pointer-events-none grayscale' : ''}">
+                                <h2 class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Silabus Prekalkulus</h2>
                                 ${silabusHtml}
                             </div>
                         </div>
                     </div>
 
                     <!-- Main Content -->
-                    <div class="flex-1 flex flex-col h-full overflow-hidden w-full relative print:block print:h-auto print:overflow-visible">
+                    <div class="flex-1 flex flex-col h-full overflow-hidden w-full relative print:block print:h-auto print:overflow-visible bg-slate-50/50">
                         <!-- Header -->
-                        <header class="bg-white border-b border-gray-200 p-4 flex items-center print:hidden">
-                            <button class="mr-4 text-gray-500 hover:text-gray-700 md:hidden" onclick="toggleSidebar()">
+                        <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center shadow-sm print:hidden">
+                            <button class="mr-4 text-slate-500 hover:text-blue-600 transition-colors md:hidden" onclick="toggleSidebar()">
                                 <i data-lucide="menu"></i>
                             </button>
-                            <h2 class="text-lg font-semibold text-gray-800">${headerTitle}</h2>
+                            <h2 class="text-lg font-display font-bold text-slate-800">${headerTitle}</h2>
                         </header>
                         
                         <!-- Area Konten Dinamis -->
-                        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 print:block print:overflow-visible print:p-0 print:bg-white">
+                        <main class="flex-1 overflow-y-auto p-4 md:p-10 print:block print:overflow-visible print:p-0 print:bg-white">
                             ${state.activeTab === 'learn' ? renderLearningView(currentUnitData) : ''}
                             ${state.activeTab === 'practice' ? renderPracticeView() : ''}
                             ${state.activeTab === 'news' ? renderNewsView() : ''}
