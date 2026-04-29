@@ -430,23 +430,29 @@ Dalam video ini, kita telah mempelajari dasar-dasar fungsi, termasuk aturan peme
 
         function renderAboutView() {
             return `
-                <div class="max-w-3xl mx-auto">
-                    <div class="flex items-center space-x-4 mb-10">
-                        <div class="p-3.5 bg-blue-50 text-blue-600 rounded-2xl">
-                            <i data-lucide="user" class="w-8 h-8"></i>
-                        </div>
-                        <h1 class="text-3xl font-display font-bold text-slate-900">About This Page</h1>
-                    </div>
-                    <div class="bg-white p-10 rounded-2xl shadow-sm border border-slate-100">
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-[0_2px_15px_-3px_rgba(6,81,237,0.06)] border border-slate-100">
                         
-                        <h2 class="text-4xl md:text-5xl font-display font-extrabold text-slate-900 mb-8 tracking-tight">This platform is about you.</h2>
+                        <!-- Quote Pramoedya -->
+                        <blockquote class="mb-10 relative">
+                            <span class="absolute -top-4 -left-3 text-6xl text-blue-100 font-serif leading-none">"</span>
+                            <p class="text-2xl md:text-3xl font-display font-semibold text-slate-800 leading-snug relative z-10">
+                                Orang bilang ada kekuatan-kekuatan dahsyat yang tak terduga yang bisa timbul pada samudera, pada gunung berapi, dan pada pribadi yang tahu benar akan tujuan hidupnya.
+                            </p>
+                            <footer class="text-lg font-semibold text-blue-600 mt-6 flex items-center">
+                                <div class="w-6 h-[2px] bg-blue-600 mr-3"></div>
+                                Pramoedya Ananta Toer
+                            </footer>
+                        </blockquote>
 
-                        <p class="text-lg text-slate-600 leading-relaxed mb-6">Saya percaya bahwa sebuah wadah untuk belajar matematika secara lebih mendalam, menarik, efektif, dan gratis, bisa terwujud untuk seluruh anak di Indonesia.</p>
+                        <div class="border-t border-slate-100 pt-8 mb-8">
+                            <p class="text-lg text-slate-600 leading-relaxed">
+                                Saya percaya bahwa wadah belajar matematika yang mendalam, menarik, dan gratis bisa terwujud untuk seluruh anak Indonesia. Platform ini hadir sebagai <strong>repository pembelajaran lokal yang bebas iklan, open-source</strong>, dan dapat diakses kapan saja melalui GitHub Pages.
+                            </p>
+                        </div>
                         
-                        <p class="text-lg text-slate-600 leading-relaxed mb-8">Platform ini merupakan repository pembelajaran matematika lokal yang bebas iklan, on-demand, dan bisa diakses gratis oleh pelajar di seluruh Indonesia. Semua kode website ini bersifat open-source dan di-hosting sementara melalui GitHub Pages.</p>
-                        
-                        <h3 class="text-xl font-display font-bold text-slate-900 mb-4 mt-12 border-t border-slate-100 pt-8">Kontak</h3>
-                        <p class="text-slate-600 leading-relaxed mb-6">Jika kamu memiliki pertanyaan atau kritik/saran/masukan mengenai apapun pada platform ini, baik mengenai video pembelajaran, kuis, soal, maupun artikel, jangan ragu untuk menghubungi saya melalui:</p>
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-5 border-t border-slate-100 pt-8">Kontak Kreator</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">Jika kamu memiliki pertanyaan atau masukan mengenai video pembelajaran, kuis, maupun artikel, jangan ragu untuk menghubungi saya melalui:</p>
                         
                         <div class="flex flex-col sm:flex-row gap-4">
                             <a href="mailto:h.mashuum@gmail.com" class="inline-flex items-center text-slate-700 hover:text-blue-600 font-medium transition-colors p-3.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-200">
@@ -465,11 +471,13 @@ Dalam video ini, kita telah mempelajari dasar-dasar fungsi, termasuk aturan peme
         // Fungsi Induk untuk Menggambar Seluruh Halaman
         function render() {
             const currentUnitData = kurikulum.find(u => u.id === state.activeUnit);
+            
+            // Penyesuaian Header agar konsisten
             let headerTitle = '';
             if (state.activeTab === 'learn') headerTitle = currentUnitData.title;
             else if (state.activeTab === 'practice') headerTitle = 'Pusat Latihan Soal';
-            else if (state.activeTab === 'news') headerTitle = 'Portal Pengumuman';
-            else if (state.activeTab === 'about') headerTitle = 'Tentang Halaman Ini';
+            else if (state.activeTab === 'news') headerTitle = 'News & Updates';
+            else if (state.activeTab === 'about') headerTitle = 'About Me';
             
             // Generate Silabus Sidebar
             const silabusHtml = kurikulum.map(unit => {
